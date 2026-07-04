@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:egalitariancomputers.com)",
+      "Bash(django-admin startproject *)",
+      "Bash(python manage.py startapp core)",
+      "Bash(python manage.py startapp courses)",
+      "Bash(python manage.py startapp events)",
+      "Bash(python manage.py startapp accounts)",
+      "Bash(python3 -m django --version)",
+      "Bash(pip3 install *)"
+    ]
+  }
+}

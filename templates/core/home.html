@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Egalitarian Computers — Tech Education for Everyone{% endblock %}
+{% block nav_home %}nav__link--active{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container hero__inner">
+    <div>
+      <div class="hero__badge">Trusted by 28,000+ graduates worldwide</div>
+      <h1>A Learned Society Is a<br><span style="color:var(--blue-200)">Progressive Society</span></h1>
+      <p>World-class technology courses, bootcamps, and seminars — designed for everyone from beginners to advanced professionals across Africa and beyond.</p>
+      <div class="hero__actions">
+        <a href="{% url 'course_list' %}" class="btn btn--white btn--lg">Explore Courses</a>
+        <a href="{% url 'event_list' %}" class="btn btn--lg" style="color:white;border:1.5px solid rgba(255,255,255,.5);background:transparent;">Upcoming Events</a>
+      </div>
+    </div>
+
+    <div class="hero__visual">
+      <div class="hero__stat">
+        <div class="hero__stat-num">{{ stats.countries }}+</div>
+        <div class="hero__stat-label">Countries Reached</div>
+      </div>
+      <div class="hero__stat">
+        <div class="hero__stat-num">{{ stats.graduates }}</div>
+        <div class="hero__stat-label">Graduates</div>
+      </div>
+      <div class="hero__stat">
+        <div class="hero__stat-num">{{ stats.staff }}</div>
+        <div class="hero__stat-label">Qualified Staff</div>
+      </div>
+      <div class="hero__stat">
+        <div class="hero__stat-num">{{ stats.courses }}</div>
+        <div class="hero__stat-label">Courses Published</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Feature strip -->
+<section style="background:var(--blue-600); padding-block:24px;">
+  <div class="container">
+    <div style="display:flex; justify-content:space-around; flex-wrap:wrap; gap:16px;">
+      <div style="display:flex;align-items:center;gap:8px;color:white;font-weight:600;font-size:.88rem;">🎓 Expert Instructors</div>
+      <div style="display:flex;align-items:center;gap:8px;color:white;font-weight:600;font-size:.88rem;">🌍 150+ Countries</div>
+      <div style="display:flex;align-items:center;gap:8px;color:white;font-weight:600;font-size:.88rem;">📜 Auto-Graded Exams</div>
+      <div style="display:flex;align-items:center;gap:8px;color:white;font-weight:600;font-size:.88rem;">🏆 Instant Certificates</div>
+      <div style="display:flex;align-items:center;gap:8px;color:white;font-weight:600;font-size:.88rem;">💬 Online Community</div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Courses -->
+<section class="section">
+  <div class="container">
+    <div class="section__header">
+      <h2>Featured Courses</h2>
+      <p>From foundational skills to advanced specializations — every course is designed to make you job-ready.</p>
+    </div>
+
+    <div class="grid-3">
+      {% for course in featured_courses %}
+        <a href="{% url 'course_detail' course.slug %}" class="card" style="display:block;color:inherit;">
+          <div class="card__img">
+            {% if course.category == 'Programming' %}💻{% elif course.category == 'Web Design' %}🎨{% else %}🖨️{% endif %}
+          </div>
+          <div class="card__body">
+            <span class="card__tag">{{ course.category }}</span>
+            <h3 class="card__title">{{ course.title }}</h3>
+            <div class="card__price">${{ course.price }}</div>
+            <span class="btn btn--outline btn--sm" style="pointer-events:none;">View Course →</span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+
+    <div style="text-align:center; margin-top:40px;">
+      <a href="{% url 'course_list' %}" class="btn btn--primary btn--lg">View All Courses</a>
+    </div>
+  </div>
+</section>
+
+<!-- Why Egalitarian -->
+<section class="section section--gray">
+  <div class="container">
+    <div class="section__header">
+      <h2>Why Choose Egalitarian Computers?</h2>
+      <p>We believe everyone contributes to human advancement. Our platform is built to remove barriers, not create them.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card" style="padding:28px;">
+        <div style="font-size:2.2rem;margin-bottom:14px;">🌐</div>
+        <h3 style="margin-bottom:8px;">Global Network</h3>
+        <p style="font-size:.9rem;">Our graduates come from 150+ countries. Learning has no borders here.</p>
+      </div>
+      <div class="card" style="padding:28px;">
+        <div style="font-size:2.2rem;margin-bottom:14px;">🧑‍🏫</div>
+        <h3 style="margin-bottom:8px;">World-Class Instructors</h3>
+        <p style="font-size:.9rem;">750+ qualified instructors bringing industry experience directly to your screen.</p>
+      </div>
+      <div class="card" style="padding:28px;">
+        <div style="font-size:2.2rem;margin-bottom:14px;">📊</div>
+        <h3 style="margin-bottom:8px;">Structured Curriculum</h3>
+        <p style="font-size:.9rem;">Every course follows a progressive path — from theory to hands-on projects.</p>
+      </div>
+      <div class="card" style="padding:28px;">
+        <div style="font-size:2.2rem;margin-bottom:14px;">🏅</div>
+        <h3 style="margin-bottom:8px;">Instant Certification</h3>
+        <p style="font-size:.9rem;">Pass the exam and receive a certificate automatically. No waiting, no approvals.</p>
+      </div>
+      <div class="card" style="padding:28px;">
+        <div style="font-size:2.2rem;margin-bottom:14px;">🔒</div>
+        <h3 style="margin-bottom:8px;">Secure Exam System</h3>
+        <p style="font-size:.9rem;">Timer-based, auto-graded MCQ exams with full attempt history preserved.</p>
+      </div>
+      <div class="card" style="padding:28px;">
+        <div style="font-size:2.2rem;margin-bottom:14px;">💳</div>
+        <h3 style="margin-bottom:8px;">Flexible Payment</h3>
+        <p style="font-size:.9rem;">Pay via bank transfer at your own pace. Our admin team confirms manually.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Upcoming Events -->
+<section class="section">
+  <div class="container">
+    <div class="section__header">
+      <h2>Upcoming Events</h2>
+      <p>Bootcamps, seminars, and workshops — no account required to register.</p>
+    </div>
+    <div class="grid-3">
+      {% for event in upcoming_events %}
+        <a href="{% url 'event_detail' event.slug %}" class="card event-card" style="display:flex;flex-direction:column;color:inherit;">
+          <div class="card__body" style="flex:1;">
+            <span class="event-type-badge event-type-badge--bootcamp">Event</span>
+            <h3 class="card__title" style="margin-top:10px;">{{ event.title }}</h3>
+            <div class="event-card__date">📅 {{ event.date }}</div>
+            <div class="card__price {% if event.price == 0 %}card__price--free{% endif %}">
+              {% if event.price == 0 %}Free{% else %}${{ event.price }}{% endif %}
+            </div>
+            <div style="font-size:.82rem;color:var(--gray-400);">{{ event.seats_left }} seats remaining</div>
+            <div class="seats-bar">
+              <div class="seats-bar__fill" style="width:{{ event.seats_left }}%;"></div>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    <div style="text-align:center; margin-top:40px;">
+      <a href="{% url 'event_list' %}" class="btn btn--outline btn--lg">All Events</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Banner -->
+<section style="background:linear-gradient(135deg,var(--blue-800),var(--blue-600)); padding-block:72px; text-align:center; color:white;">
+  <div class="container">
+    <h2 style="color:white; margin-bottom:14px;">Ready to Level Up Your Skills?</h2>
+    <p style="color:var(--blue-100); font-size:1.05rem; margin-bottom:32px; max-width:500px; margin-inline:auto;">Join thousands of learners who have transformed their careers through Egalitarian Computers.</p>
+    <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+      <a href="{% url 'register' %}" class="btn btn--white btn--lg">Create Free Account</a>
+      <a href="{% url 'course_list' %}" class="btn btn--lg" style="color:white;border:1.5px solid rgba(255,255,255,.5);background:transparent;">Browse Courses</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

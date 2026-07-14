@@ -1,31 +1,33 @@
-from django.shortcuts import render
+from urllib.parse import quote
+
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
+from django.views.decorators.http import require_POST
+
+from courses.models import Course
+from events.models import Event
 
 
 def home(request):
-    featured_courses = [
-        {'title': 'Full Stack Web Development', 'price': 700, 'slug': 'full-stack-web-development', 'category': 'Programming'},
-        {'title': 'Web Development with Django', 'price': 350, 'slug': 'web-development-django', 'category': 'Programming'},
-        {'title': 'Data Analysis Using Python', 'price': 300, 'slug': 'data-analysis-python', 'category': 'Programming'},
-        {'title': 'Computer Vision with OpenCV', 'price': 600, 'slug': 'computer-vision-opencv', 'category': 'Programming'},
-        {'title': 'Front End Web Development', 'price': 500, 'slug': 'front-end-web-development', 'category': 'Web Design'},
-        {'title': 'Desktop Publishing', 'price': 60, 'slug': 'desktop-publishing', 'category': 'Business'},
-    ]
-    upcoming_events = [
-        {'title': 'Blockchain Developer Bootcamp', 'date': '2026-07-15', 'price': 500, 'slug': 'blockchain-bootcamp-july', 'seats_left': 20},
-        {'title': 'AI & Machine Learning Seminar', 'date': '2026-08-02', 'price': 0, 'slug': 'ai-ml-seminar-aug', 'seats_left': 50},
-        {'title': 'Cybersecurity Workshop', 'date': '2026-08-20', 'price': 200, 'slug': 'cybersecurity-workshop-aug', 'seats_left': 15},
-    ]
+    featured_courses = Course.objects.all()[:6]
+    upcoming_events = Event.objects.all()[:3]
     stats = {
         'countries': 150,
         'graduates': '28,000',
         'staff': 750,
         'courses': '1,200',
     }
+    build_message = quote(
+        "Hello Egalitarian Computers! I'd like to discuss a software project "
+        "with your engineering team."
+    )
+    build_whatsapp_url = f'https://wa.me/{settings.WHATSAPP_NUMBER}?text={build_message}'
     return render(request, 'core/home.html', {
         'featured_courses': featured_courses,
         'upcoming_events': upcoming_events,
         'stats': stats,
+        'build_whatsapp_url': build_whatsapp_url,
     })
 
 
@@ -43,8 +45,8 @@ def contact(request):
 
 @login_required
 def dashboard(request):
-    enrollments = []
-    notifications = []
+    enrollments = request.user.enrollments.select_related('course')
+    notifications = request.user.notifications.all()[:5]
     return render(request, 'core/dashboard.html', {
         'enrollments': enrollments,
         'notifications': notifications,
@@ -53,5 +55,12 @@ def dashboard(request):
 
 @login_required
 def notifications(request):
-    notifications = []
+    notifications = request.user.notifications.all()
     return render(request, 'core/notifications.html', {'notifications': notifications})
+
+
+@login_required
+@require_POST
+def mark_all_notifications_read(request):
+    request.user.notifications.filter(is_read=False).update(is_read=True)
+    return redirect('notifications')

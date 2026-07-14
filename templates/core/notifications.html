@@ -5,7 +5,10 @@
 <div class="container" style="max-width:760px; padding-block:48px;">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;">
     <h2>Notifications</h2>
-    <button class="btn btn--ghost btn--sm">Mark all as read</button>
+    <form method="post" action="{% url 'mark_all_notifications_read' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn--ghost btn--sm">Mark all as read</button>
+    </form>
   </div>
 
   {% if notifications %}

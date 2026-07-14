@@ -40,7 +40,8 @@
   --shadow-lg: 0 10px 30px rgba(0,0,0,.10), 0 4px 10px rgba(0,0,0,.07);
 
   --nav-h: 68px;
-  --container: 1200px;
+  --container: 1280px;
+  --gutter: clamp(20px, 4vw, 48px);
 }
 
 /* ── Reset ──────────────────────────────────────────────────────── */
@@ -70,11 +71,11 @@ p  { color: var(--text-sm); }
   width: 100%;
   max-width: var(--container);
   margin-inline: auto;
-  padding-inline: 24px;
+  padding-inline: var(--gutter);
 }
-.section { padding-block: 80px; }
+.section { padding-block: 64px; }
 .section--gray { background: var(--gray-50); }
-.section__header { text-align: center; margin-bottom: 56px; }
+.section__header { text-align: center; margin-bottom: 48px; }
 .section__header h2 { margin-bottom: 12px; }
 .section__header p  { font-size: 1.05rem; max-width: 580px; margin-inline: auto; }
 
@@ -186,7 +187,7 @@ p  { color: var(--text-sm); }
 .hero {
   background: linear-gradient(135deg, var(--blue-800) 0%, var(--blue-600) 60%, var(--blue-400) 100%);
   color: var(--white);
-  padding-block: 96px 80px;
+  padding-block: 80px 64px;
   position: relative;
   overflow: hidden;
 }
@@ -612,6 +613,53 @@ p  { color: var(--text-sm); }
 .certificate__seal { font-size: 3rem; margin-bottom: 16px; }
 .certificate__footer { font-size: 0.82rem; color: var(--gray-400); }
 
+/* ── "Let's help you build" CTA ─────────────────────────────────── */
+.build-cta {
+  background: var(--gray-900);
+  color: var(--white);
+  padding-block: 72px;
+}
+.build-cta__inner {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.build-cta__kicker {
+  display: inline-block;
+  color: var(--blue-400);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.build-cta h2 { color: var(--white); margin-bottom: 16px; }
+.build-cta p  { color: var(--gray-300); font-size: 1.02rem; margin-bottom: 28px; max-width: 520px; }
+.build-cta__services {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.build-cta__service {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--gray-200);
+}
+.btn--whatsapp {
+  background: #25d366;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(37,211,102,.35);
+}
+.btn--whatsapp:hover { background: #1ebe5b; box-shadow: 0 4px 12px rgba(37,211,102,.45); }
+
 /* ── Alert / messages ───────────────────────────────────────────── */
 .alert {
   padding: 12px 16px;
@@ -705,6 +753,7 @@ p  { color: var(--text-sm); }
   .detail-sidebar { position: static; }
   .dashboard-grid { grid-template-columns: 1fr; }
   .exam-layout { grid-template-columns: 1fr; }
+  .build-cta__inner { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
   .grid-3 { grid-template-columns: 1fr; }
@@ -720,7 +769,7 @@ p  { color: var(--text-sm); }
     right: 0;
     background: var(--white);
     border-bottom: 1px solid var(--border);
-    padding: 16px 24px;
+    padding: 16px var(--gutter);
     gap: 4px;
     box-shadow: var(--shadow);
   }

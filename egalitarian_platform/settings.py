@@ -10,22 +10,50 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
+# Environment-driven settings. Development works with no env vars set;
+# production must set DJANGO_DEBUG=False, DJANGO_SECRET_KEY, and
+# DJANGO_ALLOWED_HOSTS (see .env.example).
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@$m&#&#5*&@6j4hho^qn_$l+pud=e)w@*%4w(v!^4$y%+&rd-v'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '')
+if not SECRET_KEY:
+    if DEBUG:
+        # Dev-only fallback; never used when DEBUG is off.
+        SECRET_KEY = 'django-insecure-@$m&#&#5*&@6j4hho^qn_$l+pud=e)w@*%4w(v!^4$y%+&rd-v'
+    else:
+        raise RuntimeError(
+            'DJANGO_SECRET_KEY environment variable is required when DEBUG is off.'
+        )
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    h.strip()
+    for h in os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+    if h.strip()
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    o.strip()
+    for o in os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS', '').split(',')
+    if o.strip()
+]
+
+# HTTPS hardening — applied automatically whenever DEBUG is off.
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
@@ -46,6 +74,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -123,9 +152,28 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# WhiteNoise serves collected static files (hashed filenames + compression) in
+# production; with DEBUG on, Django's normal static handling is used. Requires
+# `manage.py collectstatic` at deploy time.
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'egalitarian_platform.storage.TolerantManifestStaticFilesStorage',
+    },
+}
+
+# Media (certificate PDFs) is intentionally NOT served at MEDIA_URL — see the
+# note in egalitarian_platform/urls.py. Downloads go through the
+# ownership-checking exams.views.certificate_download view only.
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
+
+# WhatsApp number (international format, no '+' or leading zeros) used for the
+# manual payment reconciliation flow described in CLAUDE.md.
+WHATSAPP_NUMBER = os.environ.get('WHATSAPP_NUMBER', '2348124411984')

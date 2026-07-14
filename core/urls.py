@@ -7,4 +7,5 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('notifications/', views.notifications, name='notifications'),
+    path('notifications/mark-all-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
 ]

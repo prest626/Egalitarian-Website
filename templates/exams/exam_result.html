@@ -27,7 +27,9 @@
     </div>
 
     <div style="display:flex;gap:12px;justify-content:center;margin-top:24px;">
-      <button class="btn btn--primary" onclick="window.print()">📄 Download PDF</button>
+      {% if result.has_certificate %}
+        <a href="{% url 'certificate_download' course_slug %}" class="btn btn--primary">📄 Download Certificate PDF</a>
+      {% endif %}
       <a href="{% url 'dashboard' %}" class="btn btn--outline">Back to Dashboard</a>
     </div>
 
@@ -58,6 +60,9 @@
 
     <div style="display:flex;gap:12px;justify-content:center;">
       <a href="{% url 'exam_take' course_slug %}" class="btn btn--primary">Retake Exam</a>
+      {% if result.has_certificate %}
+        <a href="{% url 'certificate_download' course_slug %}" class="btn btn--outline">📄 Download Certificate PDF</a>
+      {% endif %}
       <a href="{% url 'dashboard' %}" class="btn btn--outline">Dashboard</a>
     </div>
   {% endif %}
